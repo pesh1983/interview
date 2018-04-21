@@ -25,6 +25,8 @@ def get_next_lottery_date(date=None):
     # and time
     LotteryDay = namedtuple('LotteryDay', ('weekday', 'time'))
     # store weekdays and time when lottery draw takes place
+    # this parameter can be passed as a function argument which
+    # gives more flexibility
     lottery_days = (
         LotteryDay(weekday=2, time=time(20)),  # Wed, 8pm
         LotteryDay(weekday=5, time=time(20)),  # Sat, 8pm
