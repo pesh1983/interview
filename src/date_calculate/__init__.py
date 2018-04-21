@@ -38,11 +38,14 @@ def get_next_lottery_date(date=None):
         for day in lottery_days:
             # calculate weekday of the current week
             weekday = day.weekday + (week_idx * days_ahead)
-            if weekday > date.weekday():
+            if weekday > date.weekday() or \
+                    (weekday == date.weekday() and day.time > date.time()):
                 # if weekday of lottery is ahead
                 # get only date and throw away time
                 date = date.date()
                 # add amount of days to the next lottery
+                # if current date equals to lottery date then subtraction
+                # will give zero
                 date += timedelta(days=weekday - date.weekday())
                 # combine date and lottery time by that date
                 # and return the result
