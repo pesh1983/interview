@@ -17,9 +17,17 @@ def lru_cache(max_size=None):
     default_max_size = 100
 
     class CacheObj(object):
+        """Class for an object to be put in cache."""
+
         __slots__ = ('age', 'key', 'value')
 
         def __init__(self, age, key, value):
+            """Initialize an instance.
+
+            :param age: Age of cache object. It is used in LRU cache mechanism.
+            :param key: A key.
+            :param value: A value.
+            """
             super(CacheObj, self).__init__()
 
             self.age = age
@@ -27,9 +35,32 @@ def lru_cache(max_size=None):
             self.value = value
 
     class LruCache(object):
+        """LRU cache.
+
+        The class implements LRU cache mechanism
+        (https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU).
+        Usage example:
+
+        .. code-block:: python
+
+            >>> cache = LruCache(2)
+            >>>
+            >>> cache['key1'] = 'value1'
+            >>> cache['key2'] = 'value2'
+            >>> cache['key3'] = 'value3'
+            >>>
+            >>> assert cache['key2'] == 'value2'
+            >>> assert cache['key3'] == 'value3'
+
+        """
+
         __slots__ = ('_age_cnt', '_storage', '_size')
 
         def __init__(self, cache_size):
+            """Initialize cache.
+
+            :param cache_size: Maximum cache size.
+            """
             super(LruCache, self).__init__()
 
             self._size = cache_size
@@ -37,6 +68,11 @@ def lru_cache(max_size=None):
             self._storage = {}
 
         def __setitem__(self, key, value):
+            """Put a value under given key in cache.
+
+            :param key: A key under which the value must be put in cache.
+            :param value: A value to be put in cache.
+            """
             next_age = self._get_next_age()
 
             if key in self._storage:
@@ -49,14 +85,25 @@ def lru_cache(max_size=None):
                     self._storage[key] = cache_obj
                 else:
                     lru_item_key = self._find_lru_item_key()
-                    del self._storage[lru_item_key]
+                    if lru_item_key is not None:
+                        del self._storage[lru_item_key]
                     self._storage[key] = cache_obj
 
         def _get_next_age(self):
+            """Get next age value.
+
+            Each time the method is executed age counter is incremented by 1.
+            :return: Next age value.
+            """
             self._age_cnt += 1
             return self._age_cnt
 
         def _find_lru_item_key(self):
+            """Find a key of least recently used value.
+
+            :return: A key or None if no key is found. The latter can happen
+            if cache is empty.
+            """
             min_age = sys.maxsize
             lru_key = None
             for key, cache_obj in self._storage.items():
@@ -66,13 +113,20 @@ def lru_cache(max_size=None):
             return lru_key
 
         def __contains__(self, key):
+            """Has cache a value under given key or not.
+
+            :param key: A key to check.
+            :return: True if cache has a value under given key,
+            False otherwise.
+            """
             return key in self._storage
 
         def __getitem__(self, key):
-            """Get
+            """Get a value under the given key from cache.
 
-            :param args:
-            :return:
+            :param key: A key under which a result is needed.
+            :raise KeyError: If there is no value in cache under the given key.
+            :return: Value from cache.
             """
             if key in self._storage:
                 cache_obj = self._storage[key]
@@ -82,6 +136,12 @@ def lru_cache(max_size=None):
             raise KeyError
 
     def get_key_from_args(*args, **kwargs):
+        """Generate a key from positional and keyword arguments.
+
+        :param args: Positional arguments.
+        :param kwargs: Keyword arguments.
+        :return: Generated key.
+        """
         return args + tuple(sorted(kwargs.items()))
 
     if callable(max_size):
@@ -91,6 +151,12 @@ def lru_cache(max_size=None):
         cache = LruCache(default_max_size)
 
         def wrapper(*args, **kwargs):
+            """Wrap a function.
+
+            :param args: Positional arguments for the function.
+            :param kwargs: Keyword arguments for the function.
+            :return: Result of execution of the function.
+            """
             cache_key = get_key_from_args(*args, **kwargs)
             if cache_key in cache:
                 return cache[cache_key]
@@ -104,7 +170,17 @@ def lru_cache(max_size=None):
         cache = LruCache(default_max_size if max_size is None else max_size)
 
         def decorator(func):
+            """Decorate a function.
+
+            :param func: A function to be decorated.
+            """
             def wrapper(*args, **kwargs):
+                """Wrap a function.
+
+                :param args: Positional arguments for the function.
+                :param kwargs: Keyword arguments for the function.
+                :return: Result of execution of the function.
+                """
                 cache_key = get_key_from_args(*args, **kwargs)
                 if cache_key in cache:
                     return cache[cache_key]
