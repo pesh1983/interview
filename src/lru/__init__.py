@@ -74,27 +74,52 @@ def lru_cache(max_size=None):
             :param key: A key under which the value must be put in cache.
             :param value: A value to be put in cache.
             """
-            next_age = self._get_next_age()
-
             if key in self._storage:
                 # if key is in cache
-                # update its value and age
-                cache_obj = self._storage[key]
-                cache_obj.value = value
-                cache_obj.age = next_age
+                self._update_item(key, value)
             else:
                 # if key is not in cache
-                # create new cache object
-                cache_obj = CacheObj(age=next_age, key=key, value=value)
-                if len(self._storage) >= self._size:
-                    # if overflow of capacity
-                    # find a key of least recently used item
-                    lru_item_key = self._find_lru_item_key()
-                    if lru_item_key is not None:
-                        # if item is found, remove it from cache
-                        del self._storage[lru_item_key]
-                # add new item to cache
-                self._storage[key] = cache_obj
+                self._add_item(key, value)
+
+        def _update_item(self, key, value):
+            """Update a value in cache under given key.
+
+            :param key: Key under which an item must be updated.
+            :param value: New value to be put in cache.
+            """
+            cache_obj = self._storage[key]
+            cache_obj.value = value
+            self._update_age(cache_obj)
+
+        def _add_item(self, key, value):
+            """Add new value into cache under given key.
+
+            :param key: Key under which a value will be added to cache.
+            :param value: Value to be put in cache.
+            :return:
+            """
+            if len(self._storage) >= self._size:
+                # if overflow of capacity
+                # find a key of least recently used item
+                lru_item_key = self._find_lru_item_key()
+                if lru_item_key is not None:
+                    # if item is found, remove it from cache
+                    del self._storage[lru_item_key]
+
+            # create new cache object
+            cache_obj = CacheObj(age=None, key=key, value=value)
+            self._update_age(cache_obj)
+            # add new item to cache
+            self._storage[key] = cache_obj
+
+        def _update_age(self, cache_obj):
+            """Update age of given cache object.
+
+            It sets the next available age to a given object.
+            :param cache_obj: Cache object which age must be updated.
+            """
+            next_age = self._get_next_age()
+            cache_obj.age = next_age
 
         def _get_next_age(self):
             """Get next age value.
@@ -137,9 +162,8 @@ def lru_cache(max_size=None):
             """
             if key in self._storage:
                 cache_obj = self._storage[key]
-                # update age of requested item
-                cache_obj.age = self._get_next_age()
-                return self._storage[key].value
+                self._update_age(cache_obj)
+                return cache_obj.value
 
             raise KeyError
 
