@@ -42,7 +42,7 @@ def timed(title):
     return decorator
 
 
-cache_sizes = (1000, 10000, 100000)
+cache_sizes = (1000, 10000, 100000, 1000000)
 
 for size in cache_sizes:
     @lru_cache(size)
