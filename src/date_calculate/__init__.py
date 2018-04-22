@@ -53,6 +53,3 @@ def get_next_lottery_date(date=None):
                 # combine date and lottery time by that date
                 # and return the result
                 return datetime.combine(date, day.time)
-
-    # in case something wrong happens return None
-    return None
