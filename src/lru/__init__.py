@@ -3,6 +3,7 @@
 Implementation of LRU cache mechanism.
 """
 import sys
+from functools import wraps
 
 
 def lru_cache(max_size=None):
@@ -157,6 +158,7 @@ def lru_cache(max_size=None):
         func = max_size
         cache = LruCache(default_max_size)
 
+        @wraps(func)
         def wrapper(*args, **kwargs):
             """Wrap a function.
 
@@ -181,6 +183,7 @@ def lru_cache(max_size=None):
 
             :param func: A function to be decorated.
             """
+            @wraps(func)
             def wrapper(*args, **kwargs):
                 """Wrap a function.
 

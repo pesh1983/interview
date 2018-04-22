@@ -34,17 +34,23 @@ class TestLruCache(TestCase):
     def test_cache_works(self):
         """Test that cache works for any combinations of arguments."""
         func_mock = mock.Mock(return_value=1)
-        func_decorated = lru_cache(func_mock)
 
-        func_decorated(1, 2, param1=1, param2=2, param3=3)
-        func_decorated(1, 2, param3=3, param2=2, param1=1)
+        @lru_cache
+        def func(*args, **kwargs):
+            func_mock(*args, **kwargs)
+
+        func(1, 2, param1=1, param2=2, param3=3)
+        func(1, 2, param3=3, param2=2, param1=1)
 
         func_mock.assert_called_once_with(1, 2, param1=1, param2=2, param3=3)
 
     def test_lru(self):
         """Test that LRU mechanism works correctly."""
         func_mock = mock.Mock(return_value=1)
-        func = lru_cache(2)(func_mock)
+
+        @lru_cache(2)
+        def func(*args, **kwargs):
+            func_mock(*args, **kwargs)
 
         func(1)  # call function and put value in cache
         # cache has 1, cache is filled on half
