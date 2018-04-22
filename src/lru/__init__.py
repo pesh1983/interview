@@ -76,18 +76,24 @@ def lru_cache(max_size=None):
             next_age = self._get_next_age()
 
             if key in self._storage:
+                # if key is in cache
+                # update its value and age
                 cache_obj = self._storage[key]
                 cache_obj.value = value
                 cache_obj.age = next_age
             else:
+                # if key is not in cache
+                # create new cache object
                 cache_obj = CacheObj(age=next_age, key=key, value=value)
-                if len(self._storage) < self._size:
-                    self._storage[key] = cache_obj
-                else:
+                if len(self._storage) >= self._size:
+                    # if overflow of capacity
+                    # find a key of least recently used item
                     lru_item_key = self._find_lru_item_key()
                     if lru_item_key is not None:
+                        # if item is found, remove it from cache
                         del self._storage[lru_item_key]
-                    self._storage[key] = cache_obj
+                # add new item to cache
+                self._storage[key] = cache_obj
 
         def _get_next_age(self):
             """Get next age value.
@@ -130,6 +136,7 @@ def lru_cache(max_size=None):
             """
             if key in self._storage:
                 cache_obj = self._storage[key]
+                # update age of requested item
                 cache_obj.age = self._get_next_age()
                 return self._storage[key].value
 
