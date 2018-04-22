@@ -46,28 +46,30 @@ class TestLruCache(TestCase):
 
     def test_lru(self):
         """Test that LRU mechanism works correctly."""
-        func_mock = mock.Mock(return_value=1)
+        func_mock = mock.Mock()
 
-        @lru_cache(2)
-        def func(*args, **kwargs):
-            func_mock(*args, **kwargs)
+        @lru_cache(3)
+        def func(value):
+            func_mock(value)
+            return value
 
         func(1)  # call function and put value in cache
-        # cache has 1, cache is filled on half
+        # cache has 1
         func(2)  # call function and put value in cache
-        # cache has 1, 2, cache is full
+        # cache has 1, 2
         func(2)  # get from cache, not calling the function
-        func(3)  # call function and put value in cache, removing 1
-        # cache has 2, 3
+        func(3)  # call function and put value in cache
+        # cache has 1, 2, 3 and it is full
         func(3)  # get from cache, not calling the function
-        func(4)  # call function and put value in cache, removing 2
-        # cache has 3, 4
-        func(1)  # call function and put value in cache, removing 3
-        # cache has 4, 1
+        func(4)  # call function and put value in cache, removing 1
+        # cache has 2, 3, 4
+        func(1)  # call function and put value in cache, removing 2
+        # cache has 3, 4, 1
         func(4)  # get from cache, not calling the function
         func(1)  # get from cache, not calling the function
-        func(2)  # call function and put value in cache, removing 4
-        # cache has 1, 2
+        func(3)  # get from cache, not calling the function
+        func(2)  # call function and put value in cache, removing 3
+        # cache has 4, 1, 2
 
         self.assertEqual(func_mock.mock_calls, [
             mock.call(1),
