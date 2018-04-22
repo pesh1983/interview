@@ -2,8 +2,9 @@
 
 Implementation of LRU cache mechanism.
 """
-import sys
 from functools import wraps
+
+from lru.structures.doubly_linked_list import Node, DoublyLinkedList
 
 
 def lru_cache(max_size=None):
@@ -55,7 +56,7 @@ def lru_cache(max_size=None):
 
         """
 
-        __slots__ = ('_age_cnt', '_storage', '_size')
+        __slots__ = ('_age_cnt', '_storage', '_size', '_items_sorted_by_age')
 
         def __init__(self, cache_size):
             """Initialize cache.
@@ -67,6 +68,10 @@ def lru_cache(max_size=None):
             self._size = cache_size
             self._age_cnt = 0
             self._storage = {}
+
+            # linked list is used to store items ordered by age
+            # this allows significantly decrease cost of searching LRU item
+            self._items_sorted_by_age = DoublyLinkedList()
 
         def __setitem__(self, key, value):
             """Put a value under given key in cache.
@@ -87,9 +92,9 @@ def lru_cache(max_size=None):
             :param key: Key under which an item must be updated.
             :param value: New value to be put in cache.
             """
-            cache_obj = self._storage[key]
-            cache_obj.value = value
-            self._update_age(cache_obj)
+            node = self._storage[key]
+            node.object.value = value
+            self._update_age(node)
 
         def _add_item(self, key, value):
             """Add new value into cache under given key.
@@ -107,25 +112,40 @@ def lru_cache(max_size=None):
 
             # create new cache object
             cache_obj = CacheObj(age=None, key=key, value=value)
-            self._update_age(cache_obj)
+            node = Node(cache_obj)
+            self._set_age(node)
             # add new item to cache
-            self._storage[key] = cache_obj
+            self._storage[key] = node
 
         def _remove_item(self, key):
             """Remove a value from cache under given key.
 
             :param key: Key under which a value must be removed.
             """
+            node = self._storage[key]
             del self._storage[key]
 
-        def _update_age(self, cache_obj):
+            self._items_sorted_by_age.remove(node)
+
+        def _update_age(self, node):
             """Update age of given cache object.
 
             It sets the next available age to a given object.
-            :param cache_obj: Cache object which age must be updated.
+            :param node: A node with cache object which age must be updated.
+            """
+            self._items_sorted_by_age.remove(node)
+            self._set_age(node)
+
+        def _set_age(self, node):
+            """Set age of given cache object.
+
+            It sets the next available age to a given object.
+            :param node: A node with cache object which age must be set.
             """
             next_age = self._get_next_age()
-            cache_obj.age = next_age
+            node.object.age = next_age
+
+            self._items_sorted_by_age.insert_end(node)
 
         def _get_next_age(self):
             """Get next age value.
@@ -142,13 +162,8 @@ def lru_cache(max_size=None):
             :return: A key or None if no key is found. The latter can happen
             if cache is empty.
             """
-            min_age = sys.maxsize
-            lru_key = None
-            for key, cache_obj in self._storage.items():
-                if min_age > cache_obj.age:
-                    min_age = cache_obj.age
-                    lru_key = key
-            return lru_key
+            node = self._items_sorted_by_age.first_node
+            return node.object.key if node else None
 
         def __contains__(self, key):
             """Has cache a value under given key or not.
@@ -167,9 +182,9 @@ def lru_cache(max_size=None):
             :return: Value from cache.
             """
             if key in self._storage:
-                cache_obj = self._storage[key]
-                self._update_age(cache_obj)
-                return cache_obj.value
+                node = self._storage[key]
+                self._update_age(node)
+                return node.object.value
 
             raise KeyError
 
