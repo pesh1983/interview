@@ -4,7 +4,7 @@ import unittest
 from lru.structures.doubly_linked_list import DoublyLinkedList, Node
 
 
-class DoublyLinkedListTestCase(unittest.TestCase):
+class TestDoublyLinkedList(unittest.TestCase):
     """Tests of doubly linked list."""
 
     def test_creation_from_list(self):
