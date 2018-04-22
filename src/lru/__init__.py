@@ -103,14 +103,20 @@ def lru_cache(max_size=None):
                 # find a key of least recently used item
                 lru_item_key = self._find_lru_item_key()
                 if lru_item_key is not None:
-                    # if item is found, remove it from cache
-                    del self._storage[lru_item_key]
+                    self._remove_item(lru_item_key)
 
             # create new cache object
             cache_obj = CacheObj(age=None, key=key, value=value)
             self._update_age(cache_obj)
             # add new item to cache
             self._storage[key] = cache_obj
+
+        def _remove_item(self, key):
+            """Remove a value from cache under given key.
+
+            :param key: Key under which a value must be removed.
+            """
+            del self._storage[key]
 
         def _update_age(self, cache_obj):
             """Update age of given cache object.
