@@ -3,6 +3,7 @@
 Implementation of a function that finds anagrams of given word in given list
 of words.
 """
+from array import array
 from collections import defaultdict
 from functools import partial
 
@@ -41,7 +42,7 @@ def prepare_storage_with_words(words):
     }
     :return: The structure described above.
     """
-    result = defaultdict(partial(defaultdict, list))
+    result = defaultdict(partial(defaultdict, lambda: array('L')))
     for idx, item in enumerate(words):
         letters_amount = len(item)
         sorted_letters = ''.join(sorted(item.lower()))
