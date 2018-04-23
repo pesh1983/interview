@@ -19,6 +19,10 @@ def get_next_lottery_date(date=None):
         # get the current one
         date = datetime.now()
 
+    # check the given date is correct datetime object
+    if not isinstance(date, datetime):
+        raise ValueError('Argument \'date\' must be a valid datetime object')
+
     # create class for convenience
     # it stores a day of a week:
     # 0 - Mon, 1 - Tue, 2 - Wed, 3 - Thu, 4 - Fri, 5 - Sat, 6 - Sun

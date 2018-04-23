@@ -69,3 +69,11 @@ class TestDateCalculation(TestCase):
 
         self.assertEqual(result_date, datetime(2018, 4, 14, 20))
         self.assertEqual(result_date.strftime('%a %I%p'), 'Sat 08PM')
+
+    def test_incorrect_date_object_passed(self):
+        """Test handling incorrect value for 'date' argument."""
+        with self.assertRaises(ValueError) as exc_info:
+            get_next_lottery_date({})
+
+        self.assertEqual(exc_info.exception.args[0],
+                         'Argument \'date\' must be a valid datetime object')
