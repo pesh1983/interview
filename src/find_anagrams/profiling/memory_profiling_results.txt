@@ -1,0 +1,8 @@
+Using 'list' as leaf:
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+    10     40.8 MiB     40.8 MiB   @profile
+    11                             def profile_memory_of_storage():
+    12                                 """Create storage."""
+    13     98.2 MiB     57.5 MiB       prepare_storage_with_words(dictionary)
