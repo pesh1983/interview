@@ -29,7 +29,8 @@ Tests are available in `src/lru/tests.py`.
 Performance tests are avaialble in `src/lru/performance_test.py` and can be run from `src` folder as `python lru/performance_test.py`.
 
 # Task 3 - Find the anagram
-Implementation is stored under the package `find_anagrams` (`src/find_anagrams/__init__.py`) in the function `find_anagrams`.
+Implementation is stored under the package `find_anagrams` (`src/find_anagrams/__init__.py`) in the function `find_anagrams`.  
+The first implementation used `list` as a leaf type in prepared storage with words. Then it was replaced with `array` and memory decreases significantly. It is mirrored in profiling results. Probably, using Bloom's filter in implementation may decrease memory consuming better. But such approach needs measuring and investigation.
 
 Tests are available in `src/find_anagrams/tests.py`.
 
