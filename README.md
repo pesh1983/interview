@@ -34,7 +34,7 @@ The first implementation used `list` as a leaf type in prepared storage with wor
 
 Tests are available in `src/find_anagrams/tests.py`.
 
-Performance tests and profiling results are located in `src/find_anagrams/profiling`. Performance and memory consuming are measured using a file `src/find_anagrams/profiling/dictionary.txt` that contains around 479k english words.
+Performance tests and profiling results are located in `src/find_anagrams/profiling`. Performance and memory consuming are measured using a file `src/find_anagrams/profiling/dictionary.txt` that contains around 479k English words.
   
 Performance tests can be executed with the command `python find_anagrams/profiling/performance_test.py`.
 
