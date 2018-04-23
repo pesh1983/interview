@@ -1,14 +1,9 @@
 """Performance tests a function that finds anagrams."""
-import os
-
 from find_anagrams import find_anagrams
+from find_anagrams.profiling import read_dictionary
 from utils import timed
 
-# read words from file
-# the file contains around 479k english words
-cur_path = os.path.dirname(__file__)
-with open(os.path.join(cur_path, 'dictionary.txt')) as dict_file:
-    dictionary = dict_file.read().split()
+dictionary = read_dictionary()
 
 # a word to find anagrams for
 word = 'rat'
