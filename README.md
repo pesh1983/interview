@@ -23,13 +23,14 @@ Tests are available in `src/date_calculation/tests.py`.
 Implementation is stored under the package `lru` (`src/lru/__init__.py`). The decorator is called `lru_cache`.
 
 At first all related classes and functions lived inside a function's body. In that case the decorator acts as a container all-in-one and can be copied as is without requiring any additional files. But then such parts as `lru.cache.LruCache` and `lru.structures.doubly_linked_list.DoublyLinkedList` can be used in other code of real project so I decided to move them into separate packages for re-usability.
- 
+
 Tests are available in `src/lru/tests.py`.
-  
+
 Performance tests are avaialble in `src/lru/performance_test.py` and can be run from `src` folder as `python lru/performance_test.py`.
 
 # Task 3 - Find the anagram
-Implementation is stored under the package `find_anagrams` (`src/find_anagrams/__init__.py`) in the function `find_anagrams`.  
+Implementation is stored under the package `find_anagrams` (`src/find_anagrams/__init__.py`) in the function `find_anagrams`.
+
 Tests are available in `src/find_anagrams/tests.py`.
 
 Performance tests and profiling results are located in `src/find_anagrams/profiling`. Performance and memory consuming are measured using a file `src/find_anagrams/profiling/dictionary.txt` that contains around 479k english words.
