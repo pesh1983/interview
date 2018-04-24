@@ -1,6 +1,8 @@
 """Tests of doubly linked list."""
 import unittest
 
+from six.moves import range
+
 from lru.structures.doubly_linked_list import DoublyLinkedList, Node
 
 
@@ -58,7 +60,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         linked_list.insert_beginning(Node(1))
         node = linked_list.first_node
 
-        for i in xrange(2, 4):
+        for i in range(2, 4):
             new_node = Node(i)
             linked_list.insert_after(node, new_node)
             node = new_node
@@ -76,7 +78,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         linked_list.insert_beginning(Node(1))
         node = linked_list.first_node
 
-        for i in xrange(2, 4):
+        for i in range(2, 4):
             new_node = Node(i)
             linked_list.insert_before(node, new_node)
             node = new_node

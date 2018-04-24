@@ -5,6 +5,8 @@ Implementation of a function that calculates next lottery draw date.
 from collections import namedtuple
 from datetime import datetime, time, timedelta
 
+from six.moves import range
+
 
 def get_next_lottery_date(date=None):
     """Calculate the next Irish lottery draw date.
@@ -40,7 +42,7 @@ def get_next_lottery_date(date=None):
     # maximum days ahead for the current range
     days_ahead = 7
     # iterate over the current week and the next one
-    for week_idx in xrange(2):
+    for week_idx in range(2):
         # take each day
         for day in lottery_days:
             # calculate weekday of the current week

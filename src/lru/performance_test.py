@@ -1,4 +1,6 @@
 """Performance tests of LRU cache implementation."""
+from six.moves import range
+
 from lru import lru_cache
 from utils import timed
 
@@ -13,7 +15,7 @@ for size in cache_sizes:
     @timed(size)
     def fill_cache():
         """Fill empty cache."""
-        for idx in xrange(size):
+        for idx in range(size):
             test_func(idx, idx + 1)
 
     fill_cache()
@@ -21,7 +23,7 @@ for size in cache_sizes:
     @timed(size)
     def replace_cache():
         """Replace all values in fully stocked cache with the new ones."""
-        for idx in xrange(size):
+        for idx in range(size):
             test_func(idx + 1, idx)
 
     replace_cache()
