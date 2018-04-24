@@ -1,5 +1,5 @@
 # Requirements
-Test application requires CPython>=2.7.
+Test application requires CPython>=2.7 but it also compatible with CPython>=3. 
 
 # Set up virtual environment
 1. Clone the repository `git clone https://github.com/pesh1983/test_betbright`.
