@@ -2,8 +2,8 @@
 Test application requires CPython>=2.7 but it is also compatible with CPython>=3. 
 
 # Set up virtual environment
-1. Clone the repository `git clone https://github.com/pesh1983/test_betbright`.
-2. Go to project's directory `cd test_betbright`
+1. Clone the repository `git clone https://github.com/pesh1983/interview`.
+2. Go to project's directory `cd interview`
 3. Install `virtualenv` if not installed (https://virtualenv.pypa.io/en/stable/installation/). 
 4. Create virtual environment and activate it `virtualenv venv && source venv/bin/activate`.
 5. Install `pip` if not installed (https://pip.pypa.io/en/stable/installing/).
